@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timefold VUZ Schedule Optimizer | Расписание занятий</title>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              300: '#93c5fd',
+              400: '#60a5fa',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+            cardbg: '#DDF0FF',
+            cardborder: '#BDE0FE',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <style>
+    body {
+      background-color: #F8FAFC;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+    /* Elegant light scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #F1F5F9; }
+    ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94A3B8; }
+
+    .timetable-grid th, .timetable-grid td {
+      border-color: #E2E8F0;
+    }
+    .custom-select {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%2364748b' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.6rem center;
+      background-repeat: no-repeat;
+      background-size: 1.25em 1.25em;
+      padding-right: 2.2rem;
+      appearance: none;
+    }
+  </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col antialiased">
+
+  <!-- TOP HEADER / APP BAR -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+    <div class="max-w-[1720px] mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand & Service Status -->
+      <div class="flex items-center space-x-3.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center shadow-md shadow-blue-500/20 text-white">
+          <i class="ph-bold ph-calendar-check text-xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-bold text-slate-900 tracking-tight">Timefold VUZ Schedule</span>
+            <span class="text-[11px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 font-semibold font-mono">v1.1</span>
+          </div>
+          <div id="service-status" class="flex items-center space-x-1.5 text-[11px] text-slate-500 font-medium">
+            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+            <span>Проверка сервиса...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick KPI & Primary Actions -->
+      <div class="flex items-center space-x-3">
+        <!-- Live Score Pills -->
+        <div class="hidden md:flex items-center space-x-2 text-xs">
+          <div id="quick-hard-badge" class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 border border-slate-200 font-semibold">
+            Hard: <span id="quick-hard-val">—</span>
+          </div>
+          <div id="quick-soft-badge" class="px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 border border-slate-200 font-semibold">
+            Soft: <span id="quick-soft-val">—</span>
+          </div>
+          <div id="quick-status-badge" class="px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200 font-semibold uppercase text-[10px] tracking-wider">
+            IDLE
+          </div>
+        </div>
+
+        <!-- Quick Solve Button -->
+        <button id="btn-quick-solve" class="px-3.5 py-2 text-xs font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 active:scale-95 text-white shadow-sm shadow-blue-500/20 transition flex items-center gap-2">
+          <i class="ph-bold ph-play"></i>
+          <span>Рассчитать</span>
+        </button>
+
+        <!-- Workbench Drawer Toggle -->
+        <button id="btn-toggle-workbench" class="px-3 py-2 text-xs font-medium rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200 transition flex items-center gap-1.5" title="Панель оптимизатора и аудит">
+          <i class="ph-bold ph-sliders text-sm"></i>
+          <span class="hidden sm:inline">Панель управления</span>
+          <i id="workbench-chevron" class="ph-bold ph-caret-down text-xs transition-transform duration-200"></i>
+        </button>
+
+        <a href="/docs" target="_blank" class="hidden lg:flex items-center gap-1.5 text-xs px-3 py-2 rounded-xl text-slate-500 hover:text-slate-800 hover:bg-slate-100 border border-slate-200 transition">
+          <i class="ph-bold ph-file-code text-sm"></i>
+          <span>Swagger</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- COLLAPSIBLE WORKBENCH / SOLVER CONTROL PANEL -->
+  <section id="workbench-drawer" class="bg-white border-b border-slate-200 shadow-sm transition-all duration-300">
+    <div class="max-w-[1720px] mx-auto px-4 sm:px-6 py-5 space-y-5">
+      
+      <!-- Top Action Bar -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200">
+        
+        <!-- Left: Dataset Selector & USPU -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center gap-2">
+            <label class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Датасет:</label>
+            <select id="dataset-select" class="custom-select bg-white border border-slate-300 text-xs font-medium rounded-xl px-3 py-2 text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+              <option value="synthetic_standard" selected>🏫 Синтетика (Кафедра: 6 групп, 48 пар)</option>
+              <option value="synthetic_small">⚡ Синтетика (Мини: 2 группы, 6 пар)</option>
+              <option value="uspu_real">🎓 УрГПУ (uspu.ru: ИнЯз 47 пар)</option>
+            </select>
+          </div>
+
+          <button id="btn-load-dataset" class="px-3 py-2 text-xs font-medium rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 shadow-sm transition flex items-center gap-1.5">
+            <i class="ph-bold ph-arrows-clockwise text-blue-600"></i>
+            <span>Загрузить</span>
+          </button>
+
+          <button id="btn-open-uspu-modal" class="px-3.5 py-2 text-xs font-medium rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 transition flex items-center gap-1.5">
+            <i class="ph-bold ph-globe text-indigo-600"></i>
+            <span>Спарсить с uspu.ru</span>
+          </button>
+        </div>
+
+        <!-- Right: Solver Execution Controls -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="flex items-center space-x-2 text-xs text-slate-600 bg-white px-3 py-1.5 rounded-xl border border-slate-200 shadow-sm">
+            <span>Лимит времени:</span>
+            <input type="number" id="solver-timeout" value="10" min="2" max="180" class="w-14 bg-slate-50 border border-slate-300 rounded-lg px-2 py-1 text-center font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <span>сек</span>
+          </div>
+
+          <button id="btn-solve-sync" class="px-4 py-2 text-xs font-semibold rounded-xl bg-blue-600 hover:bg-blue-700 text-white shadow-sm transition flex items-center gap-2">
+            <i class="ph-bold ph-play"></i>
+            <span>Синхронно (Sync)</span>
+          </button>
+
+          <button id="btn-solve-async" class="px-4 py-2 text-xs font-semibold rounded-xl bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 shadow-sm transition flex items-center gap-2">
+            <i class="ph-bold ph-hourglass-high text-blue-600"></i>
+            <span>В фоне (Async Task)</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Live Loading Banner -->
+      <div id="solver-progress" class="hidden p-3.5 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-between text-xs text-blue-800">
+        <div class="flex items-center space-x-3">
+          <div class="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+          <span id="progress-message" class="font-medium">Решатель Timefold выполняет оптимизацию расписания...</span>
+        </div>
+        <span id="progress-timer" class="font-mono text-blue-900 font-bold bg-white px-2 py-0.5 rounded border border-blue-200">0.0 сек</span>
+      </div>
+
+      <!-- KPI Metrics Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-[11px] text-slate-500 font-medium">Hard Score (Конфликты)</div>
+          <div id="metric-hard" class="text-xl font-bold mt-1 text-slate-400">—</div>
+          <div id="metric-feasible" class="text-[10px] mt-0.5 text-slate-400 uppercase tracking-wider font-semibold">Ожидание запуска</div>
+        </div>
+
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-[11px] text-slate-500 font-medium">Soft Score (Оптимальность)</div>
+          <div id="metric-soft" class="text-xl font-bold mt-1 text-slate-400">—</div>
+          <div class="text-[10px] mt-0.5 text-slate-400">Окна и предпочтения</div>
+        </div>
+
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-[11px] text-slate-500 font-medium">Всего занятий</div>
+          <div id="metric-lessons" class="text-xl font-bold mt-1 text-slate-800">0</div>
+          <div id="metric-pinned" class="text-[10px] mt-0.5 text-blue-600 font-medium">0 зафиксировано</div>
+        </div>
+
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-[11px] text-slate-500 font-medium">Академ. подгрупп</div>
+          <div id="metric-groups" class="text-xl font-bold mt-1 text-slate-800">0</div>
+          <div class="text-[10px] mt-0.5 text-slate-400">Атомарные юниты</div>
+        </div>
+
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-[11px] text-slate-500 font-medium">Преподавателей</div>
+          <div id="metric-teachers" class="text-xl font-bold mt-1 text-slate-800">0</div>
+          <div class="text-[10px] mt-0.5 text-slate-400">Штат кафедры</div>
+        </div>
+
+        <div class="bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm">
+          <div class="text-[11px] text-slate-500 font-medium">Время решения</div>
+          <div id="metric-time" class="text-xl font-bold mt-1 text-slate-800">—</div>
+          <div id="metric-status" class="text-[10px] mt-0.5 text-slate-400 font-semibold">IDLE</div>
+        </div>
+      </div>
+
+      <!-- Secondary Tabs: Audit & JSON Contract -->
+      <div class="border-t border-slate-200 pt-3">
+        <div class="flex items-center justify-between">
+          <div class="flex space-x-4 text-xs font-semibold">
+            <button id="btn-tab-audit" class="text-blue-600 border-b-2 border-blue-600 pb-1 flex items-center gap-1.5">
+              <i class="ph-bold ph-shield-check"></i>
+              <span>Аудит ограничений (ScoreExplanation)</span>
+            </button>
+            <button id="btn-tab-json" class="text-slate-400 hover:text-slate-700 pb-1 flex items-center gap-1.5">
+              <i class="ph-bold ph-code"></i>
+              <span>JSON Контракт</span>
+            </button>
+          </div>
+          <div id="audit-score-badge" class="text-xs px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-600 font-mono font-medium">
+            Нет данных
+          </div>
+        </div>
+
+        <!-- Tab Body: Audit -->
+        <div id="view-audit" class="mt-3">
+          <div id="audit-summary" class="bg-slate-50 p-3 rounded-xl border border-slate-200 font-mono text-xs text-slate-700 whitespace-pre-wrap overflow-x-auto max-h-48">
+Решение ещё не было запущено. Выберите датасет и нажмите «Рассчитать».
+          </div>
+        </div>
+
+        <!-- Tab Body: JSON -->
+        <div id="view-json" class="mt-3 hidden grid grid-cols-1 lg:grid-cols-2 gap-3">
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-slate-600 uppercase">SolveRequest (Входные данные)</span>
+              <button onclick="navigator.clipboard.writeText(document.getElementById('json-request').textContent)" class="text-[11px] text-blue-600 hover:underline">Копировать</button>
+            </div>
+            <pre id="json-request" class="bg-white p-2.5 rounded-lg text-[11px] font-mono text-slate-700 overflow-auto max-h-48 border border-slate-200">{}</pre>
+          </div>
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5">
+            <div class="flex items-center justify-between">
+              <span class="text-[11px] font-bold text-slate-600 uppercase">SolveResultResponse (Выходные данные)</span>
+              <button onclick="navigator.clipboard.writeText(document.getElementById('json-response').textContent)" class="text-[11px] text-blue-600 hover:underline">Копировать</button>
+            </div>
+            <pre id="json-response" class="bg-white p-2.5 rounded-lg text-[11px] font-mono text-slate-700 overflow-auto max-h-48 border border-slate-200">{}</pre>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- MAIN SCHEDULE WRAPPER -->
+  <main class="flex-1 max-w-[1720px] mx-auto px-4 sm:px-6 py-6 w-full space-y-5">
+
+    <!-- SCHEDULE NAVIGATION & FILTER BAR (EXACT REFERENCE REPLICA) -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-[0_2px_8px_rgba(0,0,0,0.03)] p-4 sm:p-5 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+      
+      <!-- Left: Navigation Arrows & Live Clock Badge -->
+      <div class="flex flex-wrap items-center gap-4 sm:gap-6">
+        
+        <!-- Navigation Arrows -->
+        <div class="flex items-center gap-1.5">
+          <button id="btn-prev-week" class="w-9 h-9 rounded-xl border border-slate-200 hover:border-slate-300 hover:bg-slate-100 active:scale-95 text-slate-600 flex items-center justify-center transition" title="Предыдущая неделя">
+            <i class="ph-bold ph-arrow-left text-base"></i>
+          </button>
+          <button id="btn-next-week" class="w-9 h-9 rounded-xl border border-slate-200 hover:border-slate-300 hover:bg-slate-100 active:scale-95 text-slate-600 flex items-center justify-center transition" title="Следующая неделя">
+            <i class="ph-bold ph-arrow-right text-base"></i>
+          </button>
+        </div>
+
+        <!-- Clock & Timezone Subtitle -->
+        <div class="flex items-start gap-2.5">
+          <div class="mt-0.5 text-blue-500">
+            <i class="ph-bold ph-clock text-lg"></i>
+          </div>
+          <div>
+            <div class="text-sm font-semibold text-slate-800 leading-tight">
+              Сейчас у вас <span id="clock-live-time" class="text-blue-600 font-bold border-b border-dashed border-blue-400">16:48</span>
+            </div>
+            <div class="text-[11px] text-slate-400 font-normal mt-0.5">
+              Время на сайте указано в вашем часовом поясе
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Week Range Tag -->
+        <div class="hidden md:flex items-center gap-2 pl-3 border-l border-slate-200">
+          <span id="active-week-label" class="text-xs font-bold text-slate-800">10 – 16 апреля</span>
+          <span id="active-parity-tag" class="px-2 py-0.5 text-[10px] font-semibold rounded-full bg-blue-50 text-blue-600 border border-blue-200">
+            Числитель
+          </span>
+        </div>
+
+      </div>
+
+      <!-- Right: Reference Filter Dropdowns -->
+      <div class="flex flex-wrap items-center gap-2.5">
+        
+        <!-- Parity Segment Control -->
+        <div class="flex rounded-xl bg-slate-100 p-1 border border-slate-200 text-xs">
+          <button data-parity="ALL" class="parity-btn px-3 py-1.5 rounded-lg bg-white text-slate-900 font-semibold shadow-xs">Все недели</button>
+          <button data-parity="NUMERATOR" class="parity-btn px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-medium">Числитель</button>
+          <button data-parity="DENOMINATOR" class="parity-btn px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 font-medium">Знаменатель</button>
+        </div>
+
+        <!-- Filter 1: Groups -->
+        <div class="relative min-w-[140px]">
+          <select id="filter-group" class="custom-select w-full bg-white border border-slate-200 hover:border-slate-300 text-xs font-medium rounded-xl px-3 py-2 text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+            <option value="ALL">Все группы</option>
+          </select>
+        </div>
+
+        <!-- Filter 2: Teachers -->
+        <div class="relative min-w-[150px]">
+          <select id="filter-teacher" class="custom-select w-full bg-white border border-slate-200 hover:border-slate-300 text-xs font-medium rounded-xl px-3 py-2 text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+            <option value="ALL">Все преподаватели</option>
+          </select>
+        </div>
+
+        <!-- Filter 3: Rooms -->
+        <div class="relative min-w-[140px]">
+          <select id="filter-room" class="custom-select w-full bg-white border border-slate-200 hover:border-slate-300 text-xs font-medium rounded-xl px-3 py-2 text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+            <option value="ALL">Все аудитории</option>
+          </select>
+        </div>
+
+        <!-- Filter 4: Subjects / Formats -->
+        <div class="relative min-w-[150px]">
+          <select id="filter-subject" class="custom-select w-full bg-white border border-slate-200 hover:border-slate-300 text-xs font-medium rounded-xl px-3 py-2 text-slate-800 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer">
+            <option value="ALL">Все предметы</option>
+          </select>
+        </div>
+
+        <!-- Reset Filters Button -->
+        <button id="btn-reset-filters" class="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition" title="Сбросить все фильтры">
+          <i class="ph-bold ph-arrow-counter-clockwise text-base"></i>
+        </button>
+
+      </div>
+
+    </div>
+
+    <!-- TIMETABLE MATRIX CARD -->
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-hidden">
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse timetable-grid text-left min-w-[1100px]">
+          
+          <!-- Days Header Row -->
+          <thead>
+            <tr class="bg-white border-b border-slate-200">
+              <th class="p-3 w-28 text-center border-r border-slate-200 text-xs font-semibold text-slate-400 uppercase tracking-wider">
+                Время
+              </th>
+              
+              <!-- 7 Days -->
+              <th class="p-3 text-center border-r border-slate-200 w-[13.5%]">
+                <div class="text-sm font-semibold text-slate-800">Понедельник</div>
+                <div id="header-date-MON" class="text-xs text-slate-400 font-normal mt-0.5">10 апреля</div>
+              </th>
+              <th class="p-3 text-center border-r border-slate-200 w-[13.5%]">
+                <div class="text-sm font-semibold text-slate-800">Вторник</div>
+                <div id="header-date-TUE" class="text-xs text-slate-400 font-normal mt-0.5">11 апреля</div>
+              </th>
+              <th class="p-3 text-center border-r border-slate-200 w-[13.5%]">
+                <div class="text-sm font-semibold text-slate-800">Среда</div>
+                <div id="header-date-WED" class="text-xs text-slate-400 font-normal mt-0.5">12 апреля</div>
+              </th>
+              <th class="p-3 text-center border-r border-slate-200 w-[13.5%]">
+                <div class="text-sm font-semibold text-slate-800">Четверг</div>
+                <div id="header-date-THU" class="text-xs text-slate-400 font-normal mt-0.5">13 апреля</div>
+              </th>
+              <th class="p-3 text-center border-r border-slate-200 w-[13.5%]">
+                <div class="text-sm font-semibold text-slate-800">Пятница</div>
+                <div id="header-date-FRI" class="text-xs text-slate-400 font-normal mt-0.5">14 апреля</div>
+              </th>
+              <th class="p-3 text-center border-r border-slate-200 w-[13.5%]">
+                <div class="text-sm font-semibold text-slate-800">Суббота</div>
+                <div id="header-date-SAT" class="text-xs text-slate-400 font-normal mt-0.5">15 апреля</div>
+              </th>
+              <th class="p-3 text-center w-[13.5%]">
+                <div class="text-sm font-semibold text-slate-800">Воскресенье</div>
+                <div id="header-date-SUN" class="text-xs text-slate-400 font-normal mt-0.5">16 апреля</div>
+              </th>
+            </tr>
+          </thead>
+
+          <!-- Matrix Body (7 Pair Slots) -->
+          <tbody id="matrix-body" class="divide-y divide-slate-200 bg-white">
+            <!-- Populated via buildEmptyMatrix() -->
+          </tbody>
+
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- LESSON DETAIL MODAL -->
+  <div id="lesson-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white max-w-lg w-full rounded-2xl p-6 shadow-2xl border border-slate-200 space-y-4">
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between border-b border-slate-100 pb-3">
+        <div>
+          <span id="modal-tag-type" class="px-2 py-0.5 text-[10px] font-semibold rounded bg-blue-100 text-blue-800 uppercase tracking-wide">Лекция</span>
+          <span id="modal-tag-freq" class="ml-1.5 px-2 py-0.5 text-[10px] font-semibold rounded bg-slate-100 text-slate-700">Еженедельно</span>
+          <h3 id="modal-subject" class="text-base font-bold text-slate-900 mt-1.5 leading-snug">Название дисциплины</h3>
+        </div>
+        <button id="btn-close-lesson-modal" class="text-slate-400 hover:text-slate-700 p-1 rounded-lg">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Modal Body Details -->
+      <div class="space-y-3 text-xs text-slate-600">
+        <div class="flex items-center gap-2">
+          <i class="ph-bold ph-clock text-blue-600 text-sm"></i>
+          <span id="modal-time" class="font-medium text-slate-800">1 пара (08:30 – 10:00)</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <i class="ph-bold ph-user text-blue-600 text-sm"></i>
+          <span id="modal-teacher" class="font-medium text-slate-800">Б. В. Демидов</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <i class="ph-bold ph-door text-blue-600 text-sm"></i>
+          <span id="modal-room" class="font-medium text-slate-800">Ауд. 402а (Вместимость: 40)</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <i class="ph-bold ph-users text-blue-600 text-sm"></i>
+          <span id="modal-groups" class="font-medium text-slate-800">Группы: ИС-21 (П1, П2)</span>
+        </div>
+
+        <div id="modal-pinned-banner" class="p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-800 flex items-center gap-2 hidden">
+          <span class="text-base">📌</span>
+          <span class="font-medium">Занятие жестко зафиксировано методистом (Pinned)</span>
+        </div>
+
+        <div id="modal-features-box" class="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-600">
+          <span class="font-semibold text-slate-700">Оборудование аудитории:</span>
+          <span id="modal-features">Компьютерный класс, Проектор</span>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="flex justify-end pt-3 border-t border-slate-100">
+        <button id="btn-dismiss-lesson-modal" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+          Закрыть
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- USPU PARSER MODAL -->
+  <div id="uspu-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white max-w-lg w-full p-6 rounded-2xl space-y-5 border border-slate-200 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center space-x-2.5">
+          <div class="w-8 h-8 rounded-xl bg-indigo-50 flex items-center justify-center text-indigo-600">
+            <i class="ph-bold ph-globe text-lg"></i>
+          </div>
+          <h3 class="text-base font-bold text-slate-900">Парсер расписания УрГПУ (uspu.ru)</h3>
+        </div>
+        <button id="btn-close-uspu-modal" class="text-slate-400 hover:text-slate-700">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3.5 text-xs">
+        <p class="text-slate-600 leading-relaxed">
+          Введите академические группы кафедры через запятую. Парсер обратится к AJAX API <code class="text-indigo-600 bg-slate-100 px-1.5 py-0.5 rounded font-mono">https://uspu.ru/ajax/rasp.php</code>, извлечет реальные предметы, преподавателей и кабинеты и сконвертирует их в <code class="text-indigo-600 bg-slate-100 px-1.5 py-0.5 rounded font-mono">SolveRequest</code>.
+        </p>
+
+        <div>
+          <label class="font-semibold text-slate-700">Номера групп УрГПУ:</label>
+          <input type="text" id="uspu-input-groups" value="АИ-2431, АИ-2331" class="w-full mt-1.5 bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-slate-800 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <div class="text-[11px] text-slate-400 mt-1">Примеры: АИ-2431, АИ-2331, АК-2431, ИВТ-2431, ПИ-2331</div>
+        </div>
+
+        <div>
+          <label class="font-semibold text-slate-700">Доля зафиксированных (pinned) пар методиста:</label>
+          <div class="flex items-center space-x-3 mt-1.5">
+            <input type="range" id="uspu-pin-slider" min="0" max="0.5" step="0.05" value="0.25" class="flex-1 accent-indigo-600">
+            <span id="uspu-pin-label" class="font-mono text-indigo-600 font-bold w-12 text-right">25%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end space-x-3 pt-3 border-t border-slate-100">
+        <button id="btn-cancel-uspu" class="px-4 py-2 text-xs font-semibold rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition">
+          Отмена
+        </button>
+        <button id="btn-execute-uspu-parse" class="px-4 py-2 text-xs font-semibold rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white flex items-center gap-1.5 shadow-sm transition">
+          <i class="ph-bold ph-download-simple"></i>
+          <span>Спарсить и загрузить</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICATION JAVASCRIPT LOGIC -->
+  <script>
+    // Exact bell schedule and pair reference
+    const TIME_SLOTS = [
+      { num: 1, label: "9:00", time: "08:30 – 10:00" },
+      { num: 2, label: "10:00", time: "10:15 – 11:45" },
+      { num: 3, label: "11:00", time: "12:00 – 13:30" },
+      { num: 4, label: "12:00", time: "14:15 – 15:45" },
+      { num: 5, label: "13:00", time: "16:00 – 17:30" },
+      { num: 6, label: "14:00", time: "17:45 – 19:15" },
+      { num: 7, label: "15:00", time: "19:30 – 21:00" },
+    ];
+
+    const DAYS = [
+      { id: "MON", name: "Понедельник", offset: 0 },
+      { id: "TUE", name: "Вторник", offset: 1 },
+      { id: "WED", name: "Среда", offset: 2 },
+      { id: "THU", name: "Четверг", offset: 3 },
+      { id: "FRI", name: "Пятница", offset: 4 },
+      { id: "SAT", name: "Суббота", offset: 5 },
+      { id: "SUN", name: "Воскресенье", offset: 6 },
+    ];
+
+    // State
+    let currentSolveRequest = null;
+    let currentSolveResult = null;
+    let selectedParity = "ALL";
+    let selectedGroup = "ALL";
+    let selectedTeacher = "ALL";
+    let selectedRoom = "ALL";
+    let selectedSubject = "ALL";
+    let currentWeekOffset = 0; // 0 = current week
+    let timerInterval = null;
+    let isWorkbenchOpen = true;
+
+    // --- DOM Loaded ---
+    document.addEventListener("DOMContentLoaded", async () => {
+      startLiveClock();
+      updateCalendarDates();
+      buildEmptyMatrix();
+      setupEventListeners();
+      checkServiceHealth();
+      await loadDataset("synthetic_standard");
+    });
+
+    // --- Live Real-Time Clock ---
+    function startLiveClock() {
+      const clockEl = document.getElementById("clock-live-time");
+      function tick() {
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        if (clockEl) {
+          clockEl.textContent = `${hours}:${minutes}`;
+        }
+      }
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    // --- Dynamic Calendar Dates (matching screenshot style) ---
+    function updateCalendarDates() {
+      const now = new Date();
+      // Get Monday of the target week
+      const dayOfWeek = (now.getDay() + 6) % 7; // Monday = 0
+      const monday = new Date(now);
+      monday.setDate(now.getDate() - dayOfWeek + (currentWeekOffset * 7));
+
+      const monthNames = [
+        "января", "февраля", "марта", "апреля", "мая", "июня",
+        "июля", "августа", "сентября", "октября", "ноября", "декабря"
+      ];
+
+      const sunday = new Date(monday);
+      sunday.setDate(monday.getDate() + 6);
+
+      // Label in header
+      const startStr = `${monday.getDate()} ${monthNames[monday.getMonth()]}`;
+      const endStr = `${sunday.getDate()} ${monthNames[sunday.getMonth()]}`;
+      const activeWeekLabel = document.getElementById("active-week-label");
+      if (activeWeekLabel) {
+        activeWeekLabel.textContent = `${monday.getDate()} – ${sunday.getDate()} ${monthNames[sunday.getMonth()]}`;
+      }
+
+      // Parity calculation
+      const weekNumber = Math.ceil((((monday - new Date(monday.getFullYear(), 0, 1)) / 86400000) + 1) / 7);
+      const isNumerator = weekNumber % 2 !== 0;
+      const activeParityTag = document.getElementById("active-parity-tag");
+      if (activeParityTag) {
+        activeParityTag.textContent = isNumerator ? "Числитель" : "Знаменатель";
+      }
+
+      // Fill day headers
+      DAYS.forEach(day => {
+        const curDay = new Date(monday);
+        curDay.setDate(monday.getDate() + day.offset);
+        const el = document.getElementById(`header-date-${day.id}`);
+        if (el) {
+          el.textContent = `${curDay.getDate()} ${monthNames[curDay.getMonth()]}`;
+        }
+      });
+    }
+
+    // --- Service Health ---
+    async function checkServiceHealth() {
+      try {
+        const res = await fetch("/health");
+        const data = await res.json();
+        const badge = document.getElementById("service-status");
+        if (data.status === "ok") {
+          badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500"></span><span class="text-emerald-700 font-semibold">Timefold Online (Py3.12)</span>`;
+        }
+      } catch (err) {
+        document.getElementById("service-status").innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500"></span><span class="text-rose-600 font-semibold">Offline</span>`;
+      }
+    }
+
+    // --- Matrix Construction ---
+    function buildEmptyMatrix() {
+      const tbody = document.getElementById("matrix-body");
+      tbody.innerHTML = "";
+
+      TIME_SLOTS.forEach(slot => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-50/50 transition-colors";
+        
+        // Time column (9:00, 10:00, etc. matching reference)
+        let html = `
+          <td class="p-3 border-r border-slate-200 text-center bg-slate-50/40 select-none">
+            <div class="text-sm font-bold text-slate-800 tracking-tight">${slot.label}</div>
+            <div class="text-[10px] text-slate-400 font-medium mt-0.5">${slot.time}</div>
+          </td>
+        `;
+
+        // 7 Day columns
+        DAYS.forEach(day => {
+          const slotId = `${day.id}_${slot.num}`;
+          html += `
+            <td id="cell-${slotId}" class="p-1.5 border-r last:border-r-0 border-slate-200 align-top min-w-[145px] max-w-[210px] h-[105px]">
+              <div class="h-full min-h-[95px] flex flex-col justify-stretch lessons-container"></div>
+            </td>
+          `;
+        });
+
+        tr.innerHTML = html;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // --- Dataset Loading ---
+    async function loadDataset(presetId) {
+      try {
+        const res = await fetch(`/api/v1/schedules/datasets/${presetId}`);
+        if (!res.ok) throw new Error("Не удалось загрузить датасет");
+        currentSolveRequest = await res.json();
+        currentSolveResult = null;
+        updateUIWithRequest(currentSolveRequest);
+      } catch (e) {
+        alert("Ошибка загрузки датасета: " + e.message);
+      }
+    }
+
+    // --- Populate UI with SolveRequest ---
+    function updateUIWithRequest(req) {
+      document.getElementById("metric-lessons").textContent = req.lessons.length;
+      const pinned = req.lessons.filter(l => l.pinned).length;
+      document.getElementById("metric-pinned").textContent = `${pinned} зафиксировано`;
+      document.getElementById("metric-groups").textContent = req.atomic_groups.length;
+      document.getElementById("metric-teachers").textContent = req.teachers.length;
+      
+      document.getElementById("metric-hard").textContent = "—";
+      document.getElementById("metric-hard").className = "text-xl font-bold mt-1 text-slate-400";
+      document.getElementById("metric-soft").textContent = "—";
+      document.getElementById("metric-feasible").textContent = "ОЖИДАЕТ РЕШЕНИЯ";
+      document.getElementById("metric-feasible").className = "text-[10px] mt-0.5 text-slate-400 uppercase tracking-wider font-semibold";
+      document.getElementById("metric-status").textContent = "ГОТОВ К РАСЧЕТУ";
+
+      document.getElementById("quick-hard-val").textContent = "—";
+      document.getElementById("quick-soft-val").textContent = "—";
+      document.getElementById("quick-status-badge").textContent = "IDLE";
+      document.getElementById("quick-status-badge").className = "px-2.5 py-1 rounded-lg bg-slate-100 text-slate-600 border border-slate-200 font-semibold uppercase text-[10px] tracking-wider";
+
+      // 1. Group filter options
+      const groupFilter = document.getElementById("filter-group");
+      const parentGroups = Array.from(new Set(req.atomic_groups.map(g => g.parent_group || g.id)));
+      groupFilter.innerHTML = `<option value="ALL">Все группы (${parentGroups.length})</option>`;
+      parentGroups.forEach(grp => {
+        groupFilter.innerHTML += `<option value="${grp}">${grp}</option>`;
+      });
+
+      // 2. Teacher filter options
+      const teacherFilter = document.getElementById("filter-teacher");
+      teacherFilter.innerHTML = `<option value="ALL">Все преподаватели (${req.teachers.length})</option>`;
+      req.teachers.forEach(t => {
+        teacherFilter.innerHTML += `<option value="${t.id}">${t.name}</option>`;
+      });
+
+      // 3. Room filter options
+      const roomFilter = document.getElementById("filter-room");
+      roomFilter.innerHTML = `<option value="ALL">Все аудитории (${req.rooms.length})</option>`;
+      req.rooms.forEach(r => {
+        roomFilter.innerHTML += `<option value="${r.id}">${r.name}</option>`;
+      });
+
+      // 4. Subject filter options
+      const subjectFilter = document.getElementById("filter-subject");
+      const subjects = Array.from(new Set(req.lessons.map(l => l.subject))).sort();
+      subjectFilter.innerHTML = `<option value="ALL">Все предметы (${subjects.length})</option>`;
+      subjects.forEach(s => {
+        subjectFilter.innerHTML += `<option value="${s}">${s}</option>`;
+      });
+
+      // JSON contract
+      document.getElementById("json-request").textContent = JSON.stringify(req, null, 2);
+      document.getElementById("json-response").textContent = "{}";
+
+      // Render pinned lessons onto matrix
+      renderActiveLessons();
+    }
+
+    // --- Render Logic ---
+    function renderActiveLessons() {
+      if (currentSolveResult) {
+        renderMatrix(currentSolveResult.lessons, currentSolveRequest.rooms, currentSolveRequest.teachers);
+      } else if (currentSolveRequest) {
+        renderMatrix(currentSolveRequest.lessons.filter(l => l.pinned), currentSolveRequest.rooms, currentSolveRequest.teachers);
+      }
+    }
+
+    function renderMatrix(lessons, rooms, teachers) {
+      // Clear cells
+      document.querySelectorAll(".lessons-container").forEach(c => c.innerHTML = "");
+
+      const roomMap = Object.fromEntries((rooms || currentSolveRequest?.rooms || []).map(r => [r.id, r]));
+      const teacherMap = Object.fromEntries((teachers || currentSolveRequest?.teachers || []).map(t => [t.id, t]));
+
+      // Filter lessons
+      const filtered = lessons.filter(lesson => {
+        // Parity
+        if (selectedParity !== "ALL") {
+          if (lesson.frequency !== "WEEKLY" && lesson.frequency !== selectedParity) {
+            return false;
+          }
+        }
+        // Group
+        if (selectedGroup !== "ALL") {
+          const match = lesson.atomic_group_ids && lesson.atomic_group_ids.some(gid => gid === selectedGroup || gid.startsWith(selectedGroup));
+          if (!match) return false;
+        }
+        // Teacher
+        if (selectedTeacher !== "ALL") {
+          if (lesson.teacher_id !== selectedTeacher) return false;
+        }
+        // Room
+        if (selectedRoom !== "ALL") {
+          const roomId = lesson.room_id || lesson.pinned_room_id;
+          if (roomId !== selectedRoom) return false;
+        }
+        // Subject
+        if (selectedSubject !== "ALL") {
+          if (lesson.subject !== selectedSubject) return false;
+        }
+        return true;
+      });
+
+      // Group lessons by slotId
+      const slotBuckets = {};
+      filtered.forEach(lesson => {
+        const slotId = lesson.slot_id || lesson.pinned_slot_id;
+        if (!slotId) return;
+        if (!slotBuckets[slotId]) slotBuckets[slotId] = [];
+        slotBuckets[slotId].push(lesson);
+      });
+
+      // Render each slot
+      Object.entries(slotBuckets).forEach(([slotId, slotLessons]) => {
+        const cell = document.getElementById(`cell-${slotId}`);
+        if (!cell) return;
+        const container = cell.querySelector(".lessons-container");
+        if (!container) return;
+
+        const count = slotLessons.length;
+        // In reference: multiple lessons in one slot are placed side-by-side! (e.g. 13:00 Tuesday)
+        const wrapper = document.createElement("div");
+        if (count === 1) {
+          wrapper.className = "h-full w-full flex flex-col";
+        } else {
+          wrapper.className = "h-full w-full grid grid-cols-2 gap-1.5";
+        }
+
+        slotLessons.forEach(lesson => {
+          const roomId = lesson.room_id || lesson.pinned_room_id;
+          const roomObj = roomMap[roomId];
+          const teacherObj = teacherMap[lesson.teacher_id];
+          const roomName = roomObj ? roomObj.name : (roomId || "Ауд. ?");
+          const teacherName = teacherObj ? teacherObj.name : (lesson.teacher_id || "Преподаватель");
+
+          const isPinned = lesson.pinned;
+          const card = document.createElement("div");
+
+          // Exact light blue reference card styling: #DDF0FF, border #BDE0FE
+          card.className = `bg-[#DDF0FF] hover:bg-[#D4EAFF] border border-[#BDE0FE] rounded-lg ${count > 1 ? 'p-1.5' : 'p-2.5'} shadow-[0_1px_2px_rgba(0,0,0,0.02)] hover:shadow-md transition-all cursor-pointer flex flex-col justify-between group h-full select-none`;
+          card.setAttribute("data-lesson-id", lesson.id);
+
+          // Find slot time label
+          const slotNum = parseInt(slotId.split("_")[1]) || 1;
+          const slotMeta = TIME_SLOTS.find(s => s.num === slotNum);
+          const timeLabel = slotMeta ? slotMeta.time : "09:00 – 10:30";
+
+          card.innerHTML = `
+            <div>
+              <div class="flex items-start justify-between gap-1">
+                <h4 class="font-semibold text-slate-900 ${count > 1 ? 'text-[11px] line-clamp-1' : 'text-xs sm:text-[13px] line-clamp-2'} leading-tight" title="${lesson.subject}">
+                  ${lesson.subject}
+                </h4>
+                ${isPinned ? '<span title="Зафиксировано методистом" class="text-xs text-amber-500 font-bold shrink-0">📌</span>' : ''}
+              </div>
+              <div class="text-[10px] text-slate-500 font-normal mt-0.5 leading-tight">${timeLabel}</div>
+              <div class="text-[11px] text-slate-600 truncate mt-1 leading-tight font-normal" title="${roomName}">
+                ${roomName}
+              </div>
+            </div>
+            <div class="mt-1.5 pt-1 border-t border-blue-200/60 flex items-center justify-between text-[10px]">
+              <span class="text-slate-700 font-medium truncate" title="${teacherName}">${teacherName}</span>
+              ${count === 1 ? `<span class="text-[9px] font-mono text-blue-700/80 bg-blue-100/60 px-1 py-0.2 rounded shrink-0">${lesson.atomic_group_ids.join(',')}</span>` : ''}
+            </div>
+          `;
+
+          // Card click -> Detail modal
+          card.addEventListener("click", () => showLessonModal(lesson, roomObj, teacherObj, slotMeta, slotId));
+          wrapper.appendChild(card);
+        });
+
+        container.appendChild(wrapper);
+      });
+    }
+
+    // --- Lesson Detail Modal ---
+    function showLessonModal(lesson, room, teacher, slotMeta, slotId) {
+      const modal = document.getElementById("lesson-modal");
+      document.getElementById("modal-subject").textContent = lesson.subject;
+      
+      const dayId = slotId.split("_")[0];
+      const dayObj = DAYS.find(d => d.id === dayId);
+      const dayName = dayObj ? dayObj.name : dayId;
+      document.getElementById("modal-time").textContent = `${dayName} • ${slotMeta ? `${slotMeta.num} пара (${slotMeta.time})` : slotId}`;
+
+      document.getElementById("modal-teacher").textContent = teacher ? `${teacher.name} (${teacher.id})` : lesson.teacher_id;
+      document.getElementById("modal-room").textContent = room ? `${room.name} (Вместимость: ${room.capacity})` : (lesson.room_id || lesson.pinned_room_id || "Аудитория не назначена");
+      document.getElementById("modal-groups").textContent = `Группы: ${lesson.atomic_group_ids.join(", ")} (Студентов: ${lesson.student_count || 25})`;
+
+      const freqMap = { "WEEKLY": "Еженедельно", "NUMERATOR": "Числитель", "DENOMINATOR": "Знаменатель" };
+      document.getElementById("modal-tag-freq").textContent = freqMap[lesson.frequency] || lesson.frequency;
+
+      const pinnedBanner = document.getElementById("modal-pinned-banner");
+      if (lesson.pinned) pinnedBanner.classList.remove("hidden");
+      else pinnedBanner.classList.add("hidden");
+
+      const featuresBox = document.getElementById("modal-features-box");
+      const featuresEl = document.getElementById("modal-features");
+      if (lesson.required_features && lesson.required_features.length > 0) {
+        featuresBox.classList.remove("hidden");
+        featuresEl.textContent = lesson.required_features.join(", ");
+      } else if (room && room.features && room.features.length > 0) {
+        featuresBox.classList.remove("hidden");
+        featuresEl.textContent = room.features.join(", ");
+      } else {
+        featuresBox.classList.add("hidden");
+      }
+
+      modal.classList.remove("hidden");
+    }
+
+    // --- Solver Response Handler ---
+    function handleSolveResponse(res, elapsedSec) {
+      currentSolveResult = res;
+      document.getElementById("metric-time").textContent = `${elapsedSec.toFixed(2)}s`;
+      document.getElementById("metric-status").textContent = res.status;
+
+      if (res.score) {
+        const hard = res.explanation ? res.explanation.hard_score : (res.score.includes("hard") ? parseInt(res.score.split("hard")[0]) : 0);
+        const soft = res.explanation ? res.explanation.soft_score : 0;
+        const isFeasible = res.explanation ? res.explanation.is_feasible : hard >= 0;
+
+        document.getElementById("metric-hard").textContent = hard;
+        document.getElementById("metric-hard").className = `text-xl font-bold mt-1 ${hard === 0 ? 'text-emerald-600' : 'text-rose-600'}`;
+
+        document.getElementById("metric-soft").textContent = soft >= 0 ? `+${soft}` : soft;
+        document.getElementById("metric-soft").className = `text-xl font-bold mt-1 ${soft >= 0 ? 'text-blue-600' : 'text-amber-600'}`;
+
+        document.getElementById("metric-feasible").textContent = isFeasible ? "✅ FEASIBLE (БЕЗ КОНФЛИКТОВ)" : "❌ INFEASIBLE (КОНФЛИКТ)";
+        document.getElementById("metric-feasible").className = `text-[10px] mt-0.5 uppercase tracking-wider font-bold ${isFeasible ? 'text-emerald-600' : 'text-rose-600'}`;
+
+        // Header quick badges
+        document.getElementById("quick-hard-val").textContent = hard;
+        document.getElementById("quick-soft-val").textContent = soft >= 0 ? `+${soft}` : soft;
+        document.getElementById("quick-status-badge").textContent = isFeasible ? "FEASIBLE" : "CONFLICT";
+        document.getElementById("quick-status-badge").className = `px-2.5 py-1 rounded-lg border font-semibold uppercase text-[10px] tracking-wider ${isFeasible ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border-rose-200'}`;
+
+        document.getElementById("audit-score-badge").textContent = res.score;
+        document.getElementById("audit-score-badge").className = `text-xs px-2.5 py-0.5 rounded-lg border font-mono font-bold ${isFeasible ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border-rose-200'}`;
+      }
+
+      if (res.explanation && res.explanation.summary) {
+        document.getElementById("audit-summary").textContent = res.explanation.summary;
+      }
+
+      document.getElementById("json-response").textContent = JSON.stringify(res, null, 2);
+
+      // Render placed lessons
+      renderActiveLessons();
+    }
+
+    // --- Event Listeners Setup ---
+    function setupEventListeners() {
+      // Toggle Workbench Drawer
+      const workbenchDrawer = document.getElementById("workbench-drawer");
+      const chevron = document.getElementById("workbench-chevron");
+      document.getElementById("btn-toggle-workbench").addEventListener("click", () => {
+        isWorkbenchOpen = !isWorkbenchOpen;
+        if (isWorkbenchOpen) {
+          workbenchDrawer.classList.remove("hidden");
+          chevron.classList.remove("rotate-180");
+        } else {
+          workbenchDrawer.classList.add("hidden");
+          chevron.classList.add("rotate-180");
+        }
+      });
+
+      // Dataset Loading Button
+      document.getElementById("btn-load-dataset").addEventListener("click", () => {
+        const preset = document.getElementById("dataset-select").value;
+        loadDataset(preset);
+      });
+
+      // Quick Solve Button (triggers sync solve)
+      document.getElementById("btn-quick-solve").addEventListener("click", () => {
+        document.getElementById("btn-solve-sync").click();
+      });
+
+      // Solve Sync
+      document.getElementById("btn-solve-sync").addEventListener("click", async () => {
+        if (!currentSolveRequest) return;
+        const timeout = parseInt(document.getElementById("solver-timeout").value) || 10;
+        currentSolveRequest.solver_timeout_seconds = timeout;
+
+        startProgress("Запуск Timefold Solver (Синхронный расчет)...");
+        const t0 = performance.now();
+        try {
+          const res = await fetch("/api/v1/schedules/solve-sync", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(currentSolveRequest)
+          });
+          const data = await res.json();
+          const elapsed = (performance.now() - t0) / 1000;
+          stopProgress();
+          handleSolveResponse(data, elapsed);
+        } catch (e) {
+          stopProgress();
+          alert("Ошибка синхронного решения: " + e.message);
+        }
+      });
+
+      // Solve Async
+      document.getElementById("btn-solve-async").addEventListener("click", async () => {
+        if (!currentSolveRequest) return;
+        const timeout = parseInt(document.getElementById("solver-timeout").value) || 10;
+        currentSolveRequest.solver_timeout_seconds = timeout;
+
+        startProgress("Постановка в фоновую очередь задач (Async)...");
+        const t0 = performance.now();
+        try {
+          const postRes = await fetch("/api/v1/schedules/solve", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(currentSolveRequest)
+          });
+          const postData = await postRes.json();
+          const jobId = postData.job_id;
+
+          const pollInterval = setInterval(async () => {
+            const getRes = await fetch(`/api/v1/schedules/${jobId}/result`);
+            const getData = await getRes.json();
+            if (getData.status === "COMPLETED") {
+              clearInterval(pollInterval);
+              const elapsed = (performance.now() - t0) / 1000;
+              stopProgress();
+              handleSolveResponse(getData, elapsed);
+            } else if (getData.status === "FAILED") {
+              clearInterval(pollInterval);
+              stopProgress();
+              alert("Ошибка выполнения: " + getData.error_message);
+            }
+          }, 1000);
+
+        } catch (e) {
+          stopProgress();
+          alert("Ошибка постановки фоновой задачи: " + e.message);
+        }
+      });
+
+      // Week Navigation Arrows
+      document.getElementById("btn-prev-week").addEventListener("click", () => {
+        currentWeekOffset--;
+        updateCalendarDates();
+      });
+      document.getElementById("btn-next-week").addEventListener("click", () => {
+        currentWeekOffset++;
+        updateCalendarDates();
+      });
+
+      // Parity Buttons
+      document.querySelectorAll(".parity-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".parity-btn").forEach(b => {
+            b.classList.remove("bg-white", "text-slate-900", "font-semibold", "shadow-xs");
+            b.classList.add("text-slate-600", "font-medium");
+          });
+          btn.classList.add("bg-white", "text-slate-900", "font-semibold", "shadow-xs");
+          btn.classList.remove("text-slate-600", "font-medium");
+          selectedParity = btn.getAttribute("data-parity");
+          renderActiveLessons();
+        });
+      });
+
+      // Dropdown Filters
+      document.getElementById("filter-group").addEventListener("change", (e) => {
+        selectedGroup = e.target.value;
+        renderActiveLessons();
+      });
+      document.getElementById("filter-teacher").addEventListener("change", (e) => {
+        selectedTeacher = e.target.value;
+        renderActiveLessons();
+      });
+      document.getElementById("filter-room").addEventListener("change", (e) => {
+        selectedRoom = e.target.value;
+        renderActiveLessons();
+      });
+      document.getElementById("filter-subject").addEventListener("change", (e) => {
+        selectedSubject = e.target.value;
+        renderActiveLessons();
+      });
+
+      // Reset Filters
+      document.getElementById("btn-reset-filters").addEventListener("click", () => {
+        selectedGroup = "ALL";
+        selectedTeacher = "ALL";
+        selectedRoom = "ALL";
+        selectedSubject = "ALL";
+        selectedParity = "ALL";
+        document.getElementById("filter-group").value = "ALL";
+        document.getElementById("filter-teacher").value = "ALL";
+        document.getElementById("filter-room").value = "ALL";
+        document.getElementById("filter-subject").value = "ALL";
+        document.querySelectorAll(".parity-btn").forEach((b, idx) => {
+          if (idx === 0) {
+            b.classList.add("bg-white", "text-slate-900", "font-semibold", "shadow-xs");
+            b.classList.remove("text-slate-600", "font-medium");
+          } else {
+            b.classList.remove("bg-white", "text-slate-900", "font-semibold", "shadow-xs");
+            b.classList.add("text-slate-600", "font-medium");
+          }
+        });
+        renderActiveLessons();
+      });
+
+      // Modal Closers
+      document.getElementById("btn-close-lesson-modal").addEventListener("click", () => {
+        document.getElementById("lesson-modal").classList.add("hidden");
+      });
+      document.getElementById("btn-dismiss-lesson-modal").addEventListener("click", () => {
+        document.getElementById("lesson-modal").classList.add("hidden");
+      });
+      document.getElementById("lesson-modal").addEventListener("click", (e) => {
+        if (e.target === document.getElementById("lesson-modal")) {
+          document.getElementById("lesson-modal").classList.add("hidden");
+        }
+      });
+
+      // USPU Modal
+      const uspuModal = document.getElementById("uspu-modal");
+      document.getElementById("btn-open-uspu-modal").addEventListener("click", () => uspuModal.classList.remove("hidden"));
+      document.getElementById("btn-close-uspu-modal").addEventListener("click", () => uspuModal.classList.add("hidden"));
+      document.getElementById("btn-cancel-uspu").addEventListener("click", () => uspuModal.classList.add("hidden"));
+
+      const pinSlider = document.getElementById("uspu-pin-slider");
+      const pinLabel = document.getElementById("uspu-pin-label");
+      pinSlider.addEventListener("input", (e) => pinLabel.textContent = `${Math.round(e.target.value * 100)}%`);
+
+      document.getElementById("btn-execute-uspu-parse").addEventListener("click", async () => {
+        const rawGroups = document.getElementById("uspu-input-groups").value;
+        const groups = rawGroups.split(",").map(g => g.trim()).filter(Boolean);
+        const pinRatio = parseFloat(pinSlider.value) || 0.25;
+
+        uspuModal.classList.add("hidden");
+        startProgress(`Парсинг расписания с uspu.ru для групп [${groups.join(", ")}]...`);
+        try {
+          const res = await fetch("/api/v1/schedules/parse-uspu", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ groups, pin_ratio: pinRatio })
+          });
+          if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.detail || "Ошибка парсинга с uspu.ru");
+          }
+          currentSolveRequest = await res.json();
+          stopProgress();
+          updateUIWithRequest(currentSolveRequest);
+        } catch (e) {
+          stopProgress();
+          alert("Ошибка парсинга: " + e.message);
+        }
+      });
+
+      // Secondary Workbench Tabs (Audit vs JSON)
+      const tabAudit = document.getElementById("btn-tab-audit");
+      const tabJson = document.getElementById("btn-tab-json");
+      const viewAudit = document.getElementById("view-audit");
+      const viewJson = document.getElementById("view-json");
+
+      tabAudit.addEventListener("click", () => {
+        tabAudit.classList.add("text-blue-600", "border-b-2", "border-blue-600");
+        tabAudit.classList.remove("text-slate-400");
+        tabJson.classList.remove("text-blue-600", "border-b-2", "border-blue-600");
+        tabJson.classList.add("text-slate-400");
+        viewAudit.classList.remove("hidden");
+        viewJson.classList.add("hidden");
+      });
+
+      tabJson.addEventListener("click", () => {
+        tabJson.classList.add("text-blue-600", "border-b-2", "border-blue-600");
+        tabJson.classList.remove("text-slate-400");
+        tabAudit.classList.remove("text-blue-600", "border-b-2", "border-blue-600");
+        tabAudit.classList.add("text-slate-400");
+        viewJson.classList.remove("hidden");
+        viewAudit.classList.add("hidden");
+      });
+
+      // Escape key closes modals
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          document.getElementById("lesson-modal").classList.add("hidden");
+          uspuModal.classList.add("hidden");
+        }
+      });
+    }
+
+    // --- Progress Indicator ---
+    function startProgress(msg) {
+      const banner = document.getElementById("solver-progress");
+      banner.classList.remove("hidden");
+      document.getElementById("progress-message").textContent = msg;
+      let sec = 0;
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        sec += 0.1;
+        document.getElementById("progress-timer").textContent = `${sec.toFixed(1)} сек`;
+      }, 100);
+    }
+
+    function stopProgress() {
+      clearInterval(timerInterval);
+      document.getElementById("solver-progress").classList.add("hidden");
+    }
+  </script>
+</body>
+</html>

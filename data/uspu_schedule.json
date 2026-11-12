@@ -1,0 +1,860 @@
+{
+  "slots": [
+    {
+      "id": "MON_1",
+      "day_of_week": "MONDAY",
+      "slot_number": 1
+    },
+    {
+      "id": "MON_2",
+      "day_of_week": "MONDAY",
+      "slot_number": 2
+    },
+    {
+      "id": "MON_3",
+      "day_of_week": "MONDAY",
+      "slot_number": 3
+    },
+    {
+      "id": "MON_4",
+      "day_of_week": "MONDAY",
+      "slot_number": 4
+    },
+    {
+      "id": "MON_5",
+      "day_of_week": "MONDAY",
+      "slot_number": 5
+    },
+    {
+      "id": "MON_6",
+      "day_of_week": "MONDAY",
+      "slot_number": 6
+    },
+    {
+      "id": "MON_7",
+      "day_of_week": "MONDAY",
+      "slot_number": 7
+    },
+    {
+      "id": "TUE_1",
+      "day_of_week": "TUESDAY",
+      "slot_number": 1
+    },
+    {
+      "id": "TUE_2",
+      "day_of_week": "TUESDAY",
+      "slot_number": 2
+    },
+    {
+      "id": "TUE_3",
+      "day_of_week": "TUESDAY",
+      "slot_number": 3
+    },
+    {
+      "id": "TUE_4",
+      "day_of_week": "TUESDAY",
+      "slot_number": 4
+    },
+    {
+      "id": "TUE_5",
+      "day_of_week": "TUESDAY",
+      "slot_number": 5
+    },
+    {
+      "id": "TUE_6",
+      "day_of_week": "TUESDAY",
+      "slot_number": 6
+    },
+    {
+      "id": "TUE_7",
+      "day_of_week": "TUESDAY",
+      "slot_number": 7
+    },
+    {
+      "id": "WED_1",
+      "day_of_week": "WEDNESDAY",
+      "slot_number": 1
+    },
+    {
+      "id": "WED_2",
+      "day_of_week": "WEDNESDAY",
+      "slot_number": 2
+    },
+    {
+      "id": "WED_3",
+      "day_of_week": "WEDNESDAY",
+      "slot_number": 3
+    },
+    {
+      "id": "WED_4",
+      "day_of_week": "WEDNESDAY",
+      "slot_number": 4
+    },
+    {
+      "id": "WED_5",
+      "day_of_week": "WEDNESDAY",
+      "slot_number": 5
+    },
+    {
+      "id": "WED_6",
+      "day_of_week": "WEDNESDAY",
+      "slot_number": 6
+    },
+    {
+      "id": "WED_7",
+      "day_of_week": "WEDNESDAY",
+      "slot_number": 7
+    },
+    {
+      "id": "THU_1",
+      "day_of_week": "THURSDAY",
+      "slot_number": 1
+    },
+    {
+      "id": "THU_2",
+      "day_of_week": "THURSDAY",
+      "slot_number": 2
+    },
+    {
+      "id": "THU_3",
+      "day_of_week": "THURSDAY",
+      "slot_number": 3
+    },
+    {
+      "id": "THU_4",
+      "day_of_week": "THURSDAY",
+      "slot_number": 4
+    },
+    {
+      "id": "THU_5",
+      "day_of_week": "THURSDAY",
+      "slot_number": 5
+    },
+    {
+      "id": "THU_6",
+      "day_of_week": "THURSDAY",
+      "slot_number": 6
+    },
+    {
+      "id": "THU_7",
+      "day_of_week": "THURSDAY",
+      "slot_number": 7
+    },
+    {
+      "id": "FRI_1",
+      "day_of_week": "FRIDAY",
+      "slot_number": 1
+    },
+    {
+      "id": "FRI_2",
+      "day_of_week": "FRIDAY",
+      "slot_number": 2
+    },
+    {
+      "id": "FRI_3",
+      "day_of_week": "FRIDAY",
+      "slot_number": 3
+    },
+    {
+      "id": "FRI_4",
+      "day_of_week": "FRIDAY",
+      "slot_number": 4
+    },
+    {
+      "id": "FRI_5",
+      "day_of_week": "FRIDAY",
+      "slot_number": 5
+    },
+    {
+      "id": "FRI_6",
+      "day_of_week": "FRIDAY",
+      "slot_number": 6
+    },
+    {
+      "id": "FRI_7",
+      "day_of_week": "FRIDAY",
+      "slot_number": 7
+    },
+    {
+      "id": "SAT_1",
+      "day_of_week": "SATURDAY",
+      "slot_number": 1
+    },
+    {
+      "id": "SAT_2",
+      "day_of_week": "SATURDAY",
+      "slot_number": 2
+    },
+    {
+      "id": "SAT_3",
+      "day_of_week": "SATURDAY",
+      "slot_number": 3
+    },
+    {
+      "id": "SAT_4",
+      "day_of_week": "SATURDAY",
+      "slot_number": 4
+    },
+    {
+      "id": "SAT_5",
+      "day_of_week": "SATURDAY",
+      "slot_number": 5
+    },
+    {
+      "id": "SAT_6",
+      "day_of_week": "SATURDAY",
+      "slot_number": 6
+    },
+    {
+      "id": "SAT_7",
+      "day_of_week": "SATURDAY",
+      "slot_number": 7
+    }
+  ],
+  "rooms": [
+    {
+      "id": "R_Учебная_аудитория_45",
+      "name": "Учебная аудитория 452 ГУК",
+      "capacity": 40,
+      "features": [
+        "PROJECTOR"
+      ]
+    },
+    {
+      "id": "R_Учебная_аудитория_47",
+      "name": "Учебная аудитория 470 ГУК",
+      "capacity": 30,
+      "features": [
+        "PROJECTOR"
+      ]
+    },
+    {
+      "id": "R_Физкультурное_спорти",
+      "name": "Физкультурное спортивное сооружение 5 ГУК",
+      "capacity": 30,
+      "features": [
+        "SPORT",
+        "PROJECTOR"
+      ]
+    },
+    {
+      "id": "R_Учебная_аудитория_37",
+      "name": "Учебная аудитория 378 ГУК",
+      "capacity": 30,
+      "features": [
+        "PROJECTOR"
+      ]
+    },
+    {
+      "id": "R_Учебная_аудитория_48",
+      "name": "Учебная аудитория 480 ГУК",
+      "capacity": 30,
+      "features": [
+        "PROJECTOR"
+      ]
+    },
+    {
+      "id": "R_Учебная_аудитория_46",
+      "name": "Учебная аудитория 460 ГУК",
+      "capacity": 40,
+      "features": [
+        "PROJECTOR"
+      ]
+    },
+    {
+      "id": "R_Учебная_аудитория_36",
+      "name": "Учебная аудитория 369 ГУК",
+      "capacity": 40,
+      "features": [
+        "PROJECTOR"
+      ]
+    }
+  ],
+  "teachers": [
+    {
+      "id": "T_Сандалова_Наталья_Вл",
+      "name": "Сандалова Наталья Владимировна",
+      "unavailable_slots": [],
+      "preferred_slots": [],
+      "unwanted_slots": []
+    },
+    {
+      "id": "T_Мацук_Олег_Владимиро",
+      "name": "Мацук Олег Владимирович",
+      "unavailable_slots": [],
+      "preferred_slots": [],
+      "unwanted_slots": []
+    },
+    {
+      "id": "T_Порсева_Кристина_Вик",
+      "name": "Порсева Кристина Викторовна",
+      "unavailable_slots": [],
+      "preferred_slots": [],
+      "unwanted_slots": []
+    },
+    {
+      "id": "T_Кирданов_Юрий_Сергее",
+      "name": "Кирданов Юрий Сергеевич",
+      "unavailable_slots": [],
+      "preferred_slots": [],
+      "unwanted_slots": []
+    },
+    {
+      "id": "T_Мурзич_Александра_Ни",
+      "name": "Мурзич Александра Николаевна",
+      "unavailable_slots": [],
+      "preferred_slots": [],
+      "unwanted_slots": []
+    },
+    {
+      "id": "T_Казакова_Ольга_Павло",
+      "name": "Казакова Ольга Павловна",
+      "unavailable_slots": [],
+      "preferred_slots": [],
+      "unwanted_slots": []
+    },
+    {
+      "id": "T_Кузина_Юлия_Викторов",
+      "name": "Кузина Юлия Викторовна",
+      "unavailable_slots": [],
+      "preferred_slots": [],
+      "unwanted_slots": []
+    }
+  ],
+  "atomic_groups": [
+    {
+      "id": "АИ-2431_SUB1",
+      "name": "АИ-2431 (Подгр. 1)",
+      "parent_group": "АИ-2431",
+      "student_count": 15
+    },
+    {
+      "id": "АИ-2431_SUB2",
+      "name": "АИ-2431 (Подгр. 2)",
+      "parent_group": "АИ-2431",
+      "student_count": 15
+    },
+    {
+      "id": "АИ-2331_SUB1",
+      "name": "АИ-2331 (Подгр. 1)",
+      "parent_group": "АИ-2331",
+      "student_count": 15
+    },
+    {
+      "id": "АИ-2331_SUB2",
+      "name": "АИ-2331 (Подгр. 2)",
+      "parent_group": "АИ-2331",
+      "student_count": 15
+    }
+  ],
+  "external_blocks": [],
+  "lessons": [
+    {
+      "id": "USPU_L_001",
+      "subject": "Теоретическая фонетика английского языка (Практ.зан-я)",
+      "teacher_id": "T_Сандалова_Наталья_Вл",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1",
+        "АИ-2431_SUB2"
+      ],
+      "student_count": 30,
+      "frequency": "NUMERATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_002",
+      "subject": "Теоретическая фонетика английского языка (Практ.зан-я)",
+      "teacher_id": "T_Сандалова_Наталья_Вл",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1",
+        "АИ-2431_SUB2"
+      ],
+      "student_count": 30,
+      "frequency": "NUMERATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_003",
+      "subject": "Коммуникативный практикум английского языка (Лаб.зан-я)",
+      "teacher_id": "T_Мацук_Олег_Владимиро",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "NUMERATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_004",
+      "subject": "Общая физическая подготовка (Лаб.зан-я)",
+      "teacher_id": "T_Порсева_Кристина_Вик",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "NUMERATOR",
+      "required_features": [
+        "SPORT"
+      ],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_005",
+      "subject": "Практика устной и письменной речи испанского языка (Лаб.зан-я)",
+      "teacher_id": "T_Кирданов_Юрий_Сергее",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "NUMERATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_006",
+      "subject": "Практическая фонетика испанского языка (Лаб.зан-я)",
+      "teacher_id": "T_Кирданов_Юрий_Сергее",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "NUMERATOR",
+      "required_features": [],
+      "pinned": true,
+      "pinned_slot_id": "WED_3",
+      "pinned_room_id": "R_Учебная_аудитория_48"
+    },
+    {
+      "id": "USPU_L_007",
+      "subject": "Практика устной и письменной речи испанского языка (Лаб.зан-я)",
+      "teacher_id": "T_Кирданов_Юрий_Сергее",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "NUMERATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_008",
+      "subject": "Практика устной и письменной речи испанского языка (Лаб.зан-я)",
+      "teacher_id": "T_Кирданов_Юрий_Сергее",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "NUMERATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_009",
+      "subject": "Практическая грамматика испанского языка (Лаб.зан-я)",
+      "teacher_id": "T_Мурзич_Александра_Ни",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "NUMERATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_010",
+      "subject": "Практика устной и письменной речи испанского языка (Лаб.зан-я)",
+      "teacher_id": "T_Кирданов_Юрий_Сергее",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "NUMERATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_011",
+      "subject": "Методика обучения английскому языку (Практ.зан-я)",
+      "teacher_id": "T_Казакова_Ольга_Павло",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1",
+        "АИ-2431_SUB2"
+      ],
+      "student_count": 30,
+      "frequency": "NUMERATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_012",
+      "subject": "Методика обучения английскому языку (Практ.зан-я)",
+      "teacher_id": "T_Казакова_Ольга_Павло",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1",
+        "АИ-2431_SUB2"
+      ],
+      "student_count": 30,
+      "frequency": "NUMERATOR",
+      "required_features": [],
+      "pinned": true,
+      "pinned_slot_id": "FRI_2",
+      "pinned_room_id": "R_Учебная_аудитория_46"
+    },
+    {
+      "id": "USPU_L_013",
+      "subject": "Теоретическая фонетика английского языка (Практ.зан-я)",
+      "teacher_id": "T_Сандалова_Наталья_Вл",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1",
+        "АИ-2431_SUB2"
+      ],
+      "student_count": 30,
+      "frequency": "DENOMINATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_014",
+      "subject": "Теоретическая фонетика английского языка (Практ.зан-я)",
+      "teacher_id": "T_Сандалова_Наталья_Вл",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1",
+        "АИ-2431_SUB2"
+      ],
+      "student_count": 30,
+      "frequency": "DENOMINATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_015",
+      "subject": "Практика устной и письменной речи испанского языка (Лаб.зан-я)",
+      "teacher_id": "T_Кирданов_Юрий_Сергее",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "DENOMINATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_016",
+      "subject": "Общая физическая подготовка (Лаб.зан-я)",
+      "teacher_id": "T_Порсева_Кристина_Вик",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "DENOMINATOR",
+      "required_features": [
+        "SPORT"
+      ],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_017",
+      "subject": "Коммуникативный практикум английского языка (Лаб.зан-я)",
+      "teacher_id": "T_Мацук_Олег_Владимиро",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "DENOMINATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_018",
+      "subject": "Методика обучения английскому языку (Практ.зан-я)",
+      "teacher_id": "T_Казакова_Ольга_Павло",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1",
+        "АИ-2431_SUB2"
+      ],
+      "student_count": 30,
+      "frequency": "DENOMINATOR",
+      "required_features": [],
+      "pinned": true,
+      "pinned_slot_id": "WED_1",
+      "pinned_room_id": "R_Учебная_аудитория_36"
+    },
+    {
+      "id": "USPU_L_019",
+      "subject": "Методика обучения английскому языку (Практ.зан-я)",
+      "teacher_id": "T_Казакова_Ольга_Павло",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1",
+        "АИ-2431_SUB2"
+      ],
+      "student_count": 30,
+      "frequency": "DENOMINATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_020",
+      "subject": "Практическая грамматика испанского языка (Лаб.зан-я)",
+      "teacher_id": "T_Мурзич_Александра_Ни",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "DENOMINATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_021",
+      "subject": "Практическая грамматика испанского языка (Лаб.зан-я)",
+      "teacher_id": "T_Мурзич_Александра_Ни",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "DENOMINATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_022",
+      "subject": "Практическая фонетика испанского языка (Лаб.зан-я)",
+      "teacher_id": "T_Кирданов_Юрий_Сергее",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "DENOMINATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_023",
+      "subject": "Практика устной и письменной речи испанского языка (Лаб.зан-я)",
+      "teacher_id": "T_Кирданов_Юрий_Сергее",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "DENOMINATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_024",
+      "subject": "Методика обучения английскому языку (Практ.зан-я)",
+      "teacher_id": "T_Казакова_Ольга_Павло",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1",
+        "АИ-2431_SUB2"
+      ],
+      "student_count": 30,
+      "frequency": "DENOMINATOR",
+      "required_features": [],
+      "pinned": true,
+      "pinned_slot_id": "FRI_3",
+      "pinned_room_id": "R_Учебная_аудитория_37"
+    },
+    {
+      "id": "USPU_L_025",
+      "subject": "Методика обучения английскому языку (Практ.зан-я)",
+      "teacher_id": "T_Казакова_Ольга_Павло",
+      "atomic_group_ids": [
+        "АИ-2431_SUB1",
+        "АИ-2431_SUB2"
+      ],
+      "student_count": 30,
+      "frequency": "DENOMINATOR",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_026",
+      "subject": "Производственная практика (Педагогическая практика по английскому языку (в школе)) (Подгруп. зан-я)",
+      "teacher_id": "T_Мурзич_Александра_Ни",
+      "atomic_group_ids": [
+        "АИ-2331_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "WEEKLY",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_027",
+      "subject": "Производственная практика (Педагогическая практика по английскому языку (в школе)) (Подгруп. зан-я)",
+      "teacher_id": "T_Мурзич_Александра_Ни",
+      "atomic_group_ids": [
+        "АИ-2331_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "WEEKLY",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_028",
+      "subject": "Производственная практика (Педагогическая практика по английскому языку (в школе)) (Подгруп. зан-я)",
+      "teacher_id": "T_Кузина_Юлия_Викторов",
+      "atomic_group_ids": [
+        "АИ-2331_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "WEEKLY",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_029",
+      "subject": "Производственная практика (Педагогическая практика по английскому языку (в школе)) (Подгруп. зан-я)",
+      "teacher_id": "T_Кузина_Юлия_Викторов",
+      "atomic_group_ids": [
+        "АИ-2331_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "WEEKLY",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_030",
+      "subject": "Производственная практика (Педагогическая практика по английскому языку (в школе)) (Групповые занятия по ПП)",
+      "teacher_id": "T_Казакова_Ольга_Павло",
+      "atomic_group_ids": [
+        "АИ-2331_SUB1",
+        "АИ-2331_SUB2"
+      ],
+      "student_count": 30,
+      "frequency": "WEEKLY",
+      "required_features": [],
+      "pinned": true,
+      "pinned_slot_id": "WED_5",
+      "pinned_room_id": "R_Учебная_аудитория_37"
+    },
+    {
+      "id": "USPU_L_031",
+      "subject": "Производственная практика (Педагогическая практика по английскому языку (в школе)) (Групповые занятия по ПП)",
+      "teacher_id": "T_Казакова_Ольга_Павло",
+      "atomic_group_ids": [
+        "АИ-2331_SUB1",
+        "АИ-2331_SUB2"
+      ],
+      "student_count": 30,
+      "frequency": "WEEKLY",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_032",
+      "subject": "Производственная практика (Педагогическая практика по английскому языку (в школе)) (Подгруп. зан-я)",
+      "teacher_id": "T_Мурзич_Александра_Ни",
+      "atomic_group_ids": [
+        "АИ-2331_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "WEEKLY",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_033",
+      "subject": "Производственная практика (Педагогическая практика по английскому языку (в школе)) (Подгруп. зан-я)",
+      "teacher_id": "T_Мурзич_Александра_Ни",
+      "atomic_group_ids": [
+        "АИ-2331_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "WEEKLY",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_034",
+      "subject": "Производственная практика (Педагогическая практика по английскому языку (в школе)) (Подгруп. зан-я)",
+      "teacher_id": "T_Кузина_Юлия_Викторов",
+      "atomic_group_ids": [
+        "АИ-2331_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "WEEKLY",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    },
+    {
+      "id": "USPU_L_035",
+      "subject": "Производственная практика (Педагогическая практика по английскому языку (в школе)) (Подгруп. зан-я)",
+      "teacher_id": "T_Кузина_Юлия_Викторов",
+      "atomic_group_ids": [
+        "АИ-2331_SUB1"
+      ],
+      "student_count": 15,
+      "frequency": "WEEKLY",
+      "required_features": [],
+      "pinned": false,
+      "pinned_slot_id": null,
+      "pinned_room_id": null
+    }
+  ],
+  "solver_timeout_seconds": 20
+}

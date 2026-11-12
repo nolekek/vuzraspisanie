@@ -1,0 +1,5 @@
+timefold==1.24.0b0
+fastapi==0.162.5
+uvicorn==0.54.0
+pydantic==2.14.3
+pytest==9.2.0
